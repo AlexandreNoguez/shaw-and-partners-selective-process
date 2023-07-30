@@ -12,7 +12,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-col p-4 bg-slate-700 text-white min-h-screen">
-      <div className='flex w-full'>
+      <div className='flex max-sm:flex-col w-full max-sm:justify-center max-sm:items-center max-sm:gap-4 '>
         <div className='flex flex-col w-1/2 items-center justify-center'>
           <UploadCsv loading={loading} setLoading={setLoading} />
         </div>
