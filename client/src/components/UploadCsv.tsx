@@ -4,9 +4,8 @@ import { api } from "@/lib/axios-config";
 import { useState, ChangeEvent } from "react";
 import { toast } from "react-toastify";
 
-export const UploadCsv = () => {
+export const UploadCsv = ({ loading, setLoading }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [loading, setLoading] = useState<boolean>(false);
 
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
