@@ -21,9 +21,11 @@ export const ReadData = ({ loading, search }: ReadDataProps) => {
   //   }
   // };
 
+  //?q=John&page=1&limit=10
+
   useEffect(() => {
     const getData = async () => {
-      let response = await api.get(`/api/users?q=${search}`)
+      let response = await api.get(`/api/users?q=${search}&page=1&limit=15`)
       setCsvData(response.data)
       // console.log(response);
 
@@ -36,7 +38,7 @@ export const ReadData = ({ loading, search }: ReadDataProps) => {
     <div className='flex flex-wrap gap-4 container mx-auto justify-center'>
       {csvData.length ? (
         csvData.map(obj => (
-          <div key={obj.key}>
+          <div key={obj._id}>
             <Card data={obj.data} />
           </div>
         ))

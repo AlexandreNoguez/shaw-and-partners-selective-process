@@ -34,24 +34,38 @@ exports.csvService = (req, res) => {
   }
 }
 
+// function findPaths(obj, parentKey = '') {
+//   let paths = [];
+//   for (let key in obj) {
+//     if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+//       paths.push(...findPaths(obj[key], parentKey + key + '.'));
+//     } else {
+//       paths.push(parentKey + key);
+//     }
+//   }
+//   return paths;
+// }
+
 exports.csvReadService = async (req, res) => {
-  const { page = 1, limit = 10, q } = req.query;
+  const { page, limit, q } = req.query;
 
   try {
+    /**FUNCAO FIXA FUNCIONANDO */
     let filter = {};
     if (q) {
       const regex = new RegExp(q, 'i');
-      // console.log("CsvData", CsvData);
-      Object.keys(CsvData.schema.tree.data).map(col => console.log(col))
       filter = {
-        'data.name': regex, // Acessar o campo corpus dentro de data
+        'data.name': regex,
       };
     }
-    // let filter = {};
+
+    /**
+     * FUNCAO DINAMICA SEM FUNCIONAR
+     */
     // if (q) {
     //   const regex = new RegExp(q, 'i');
-    //   const dynamicColumns = Object.keys(CsvData.schema.tree.data);
-    //   console.log("teste", { $or: dynamicColumns.map(column => ({ [`data.${column}`]: regex })) });
+    //   const dynamicColumns = Object.keys(CsvData.schema.paths);
+
     //   // Criar o filtro dinamicamente com base nas colunas do objeto data
     //   filter = {
     //     $or: dynamicColumns.map(column => ({ [`data.${column}`]: regex })),
@@ -59,17 +73,17 @@ exports.csvReadService = async (req, res) => {
     // }
 
     const items = await CsvData.find(filter)
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
+      .limit(Number(limit))
+      .skip((Number(page) - 1) * Number(limit))
       .exec();
 
     return res.status(200).json(items);
-
   } catch (error) {
     console.error('Error finding items:', error);
     return res.status(500).send('Internal error.');
   }
 };
+
 
 
 
