@@ -1,10 +1,10 @@
 import Image from "next/image"
 
-interface ServerResponse<T extends Array<any>> {
-  [key: string | number]: T[];
+interface CardData<T> {
+  [key: string]: T;
 }
 
-export const Card = ({ data }: ServerResponse<[]>) => {
+export const Card = ({ data }: { data: CardData<any> }) => {
   return (
     <div className="border border-white p-4 overflow-hidden bg-slate-800 max-w-xs flex flex-wrap">
       {/* <p>{data.name}</p>
