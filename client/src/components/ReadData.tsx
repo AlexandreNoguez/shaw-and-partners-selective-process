@@ -5,7 +5,12 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react'
 import { Card } from './Card';
 
-export const ReadData = ({ loading, search }) => {
+interface ReadDataProps {
+  loading: boolean;
+  search: string;
+}
+
+export const ReadData = ({ loading, search }: ReadDataProps) => {
   const [csvData, setCsvData] = useState<any[]>([]);
 
   // const data = {
