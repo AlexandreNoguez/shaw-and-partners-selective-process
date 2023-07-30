@@ -19,7 +19,13 @@ export const Card = ({ data }: { data: CardData<any> }) => {
         return (
           <div key={key}>
             {key.includes("img") ? (
-              <Image className="mx-auto m-8 rounded-2xl" src={value} alt="product image" width={100} height={100} />
+              <Image
+                className="mx-auto m-8 rounded-2xl"
+                src={value}
+                alt="product image"
+                width={100}
+                height={100}
+              />
             ) : null}
             <p className="break-all">
               <span className="font-bold">{key}:</span> {value}
