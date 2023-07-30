@@ -1,59 +1,31 @@
 'use client'
 
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, ChangeEvent } from 'react';
+import { api } from '@/lib/axios-config';
+import { UploadCsv } from '@/components/UploadCsv';
 
 export default function Home() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadStatus, setUploadStatus] = useState('');
+  const [search, setSearch] = useState<string>('');
 
-  const handleFileChange = (event) => {
-    console.log(event.target.files[0]);
 
-    setSelectedFile(event.target.files[0]);
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (!selectedFile) {
-      alert('Por favor, selecione um arquivo CSV.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('csvFile', selectedFile);
-
-    console.log(formData);
-
-    setUploadStatus('Enviando arquivo...');
-    await axios.post('http://localhost:8081/api/file', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-      .then(response => {
-        setUploadStatus('Arquivo enviado com sucesso!');
-        console.log('Resposta do servidor:', response.data);
-
-      })
-      .catch(error => {
-        console.log(error);
-        setUploadStatus('Falha ao enviar o arquivo.');
-        console.error('Erro na requisição:', error);
-
-      })
-
-  };
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex flex-col p-4 bg-slate-700 text-white min-h-screen">
+      <div className='flex w-full'>
+        <div className='flex flex-col w-1/2 items-center justify-center'>
+          <UploadCsv />
+        </div>
+        <div className='flex flex-col w-1/2 justify-center items-center'>
+          <h1>Filter by selected category.</h1>
+          <input
+            className='text-black'
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+        </div>
+      </div>
       <div>
-        <h1>Upload de arquivo CSV</h1>
-        <form onSubmit={handleSubmit}>
-          <input type="file" onChange={handleFileChange} accept=".csv" />
-          <button type="submit">Enviar</button>
-        </form>
-        {uploadStatus && <p>{uploadStatus}</p>}
+        teste
       </div>
     </main>
   )
