@@ -35,29 +35,106 @@ exports.csvService = (req, res) => {
 }
 
 exports.csvReadService = async (req, res) => {
-
-  console.log(req.query);
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 10, q } = req.query;
 
   try {
-    const nameQueryParam = req.query.name;
-
-    if (nameQueryParam) {
-      const items = await CsvData.find({ name: nameQueryParam })
-        .limit(limit * 1)
-        .skip((page - 1) * limit)
-        .exec()
-      return res.status(200).json(items);
-    } else {
-      const allItems = await CsvData.find()
-        .limit(limit * 1)
-        .skip((page - 1) * limit)
-        .exec()
-      return res.status(200).json(allItems);
+    let filter = {};
+    if (q) {
+      const regex = new RegExp(q, 'i');
+      // console.log("CsvData", CsvData);
+      Object.keys(CsvData.schema.tree.data).map(col => console.log(col))
+      filter = {
+        'data.name': regex, // Acessar o campo corpus dentro de data
+      };
     }
+    // let filter = {};
+    // if (q) {
+    //   const regex = new RegExp(q, 'i');
+    //   const dynamicColumns = Object.keys(CsvData.schema.tree.data);
+    //   console.log("teste", { $or: dynamicColumns.map(column => ({ [`data.${column}`]: regex })) });
+    //   // Criar o filtro dinamicamente com base nas colunas do objeto data
+    //   filter = {
+    //     $or: dynamicColumns.map(column => ({ [`data.${column}`]: regex })),
+    //   };
+    // }
+
+    const items = await CsvData.find(filter)
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .exec();
+
+    return res.status(200).json(items);
 
   } catch (error) {
-    // console.error('Error finding items:', error);
+    console.error('Error finding items:', error);
     return res.status(500).send('Internal error.');
   }
-}
+};
+
+
+
+
+
+
+//ESSE CODIGO FUNCIONOU UNICAMENTE PRA CORPUS
+// exports.csvReadService = async (req, res) => {
+//   const { page = 1, limit = 10, q } = req.query;
+
+//   try {
+//     let filter = {};
+//     if (q) {
+//       const regex = new RegExp(q, 'i');
+//       filter = {
+//         'data.corpus': regex, // Acessar o campo corpus dentro de data
+//       };
+//     }
+
+//     const items = await CsvData.find(filter)
+//       .limit(limit * 1)
+//       .skip((page - 1) * limit)
+//       .exec();
+
+//     return res.status(200).json(items);
+
+//   } catch (error) {
+//     console.error('Error finding items:', error);
+//     return res.status(500).send('Internal error.');
+//   }
+// };
+
+
+// exports.csvReadService = async (req, res) => {
+//   const { page = 1, limit = 10, q } = req.query;
+//   console.log("req.query", req.query);
+//   try {
+//     let filter = {};
+//     if (q) {
+//       const regex = new RegExp(q, 'i');
+//       const dynamicColumns = Object.keys(CsvData.schema.tree);
+//       filter = {
+//         $or: dynamicColumns.map(column => {
+//           if (column !== '_id' && column !== '__v') {
+//             console.log("column", column);
+//             console.log("data.${column}", `data.${column}`);
+//             console.log("========");
+//             console.log(regex)
+//             return { [`data.${column}`]: regex };
+//           }
+//           return null;
+//         }).filter(Boolean),
+//       };
+//     }
+
+//     const items = await CsvData.find(filter)
+//       .limit(limit * 1)
+//       .skip((page - 1) * limit)
+//       .exec();
+
+//     return res.status(200).json(items);
+
+//   } catch (error) {
+//     console.error('Error finding items:', error);
+//     return res.status(500).send('Internal error.');
+//   }
+// };
+
