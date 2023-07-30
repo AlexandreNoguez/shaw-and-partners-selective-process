@@ -2,25 +2,29 @@
 
 import { api } from "@/lib/axios-config";
 import { useState, ChangeEvent } from "react";
+import { toast } from "react-toastify";
 
 export const UploadCsv = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [uploadStatus, setUploadStatus] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file: File = event.target.files[0];
 
+      toast.success("File added successfuly\n" + file.name)
       setSelectedFile(file);
     }
   };
 
   const handleSubmit = async (event: ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
 
     if (!selectedFile) {
-      alert('Please, select a CSV file.');
+      toast.warning('Please, select a CSV file.');
+      setLoading(false)
       return;
     }
 
@@ -28,7 +32,7 @@ export const UploadCsv = () => {
     formData.append('csvFile', selectedFile);
 
     // console.log(formData);
-    setUploadStatus('Sending file...');
+    // setUploadStatus('Sending file...');
 
     try {
       let csvFile = await api.post('/api/file', formData, {
@@ -36,13 +40,16 @@ export const UploadCsv = () => {
           'Content-Type': 'multipart/form-data',
         },
       })
-      setUploadStatus('CSV sent successfuly!');
+      // setUploadStatus('CSV sent successfuly!');
       console.log('response:', csvFile.data);
-
+      toast.success("CSV sent successfuly")
     } catch (error) {
-      setUploadStatus('Failed to send CSV file.');
+      // setUploadStatus('Failed to send CSV file.');
+      toast.error("Failed to send CSV file")
       console.error('Failed to send CSV file:', error);
 
+    } finally {
+      setLoading(false)
     }
 
   };
@@ -62,15 +69,14 @@ export const UploadCsv = () => {
 
         <button
           className='border border-black rounded-lg px-1 bg-slate-400 text-white w-[100px] hover:bg-slate-500'
+          disabled={loading ? true : false}
           type="submit">
-          Send
+          {loading ? "Loading" : "Send"}
         </button>
 
 
-        {selectedFile && <span className="">{selectedFile.name}</span>}
 
       </form>
-      {uploadStatus && <p>{uploadStatus}</p>}
     </>
   )
 }
