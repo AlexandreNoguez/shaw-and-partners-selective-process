@@ -17,3 +17,5 @@ app.use('/api', csvRoutes)
 app.listen(port, () => {
   console.log("Server started at", new Date().toLocaleString())
 })
+
+module.exports = app
