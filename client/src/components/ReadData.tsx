@@ -1,7 +1,6 @@
 'use client'
 
 import { api } from '@/lib/axios-config'
-import Image from 'next/image';
 import { useEffect, useState } from 'react'
 import { Card } from './Card';
 
@@ -13,22 +12,10 @@ interface ReadDataProps {
 export const ReadData = ({ loading, search }: ReadDataProps) => {
   const [csvData, setCsvData] = useState<any[]>([]);
 
-  // const data = {
-  //   data: {
-  //     name: 'John',
-  //     age: 30,
-  //     city: 'New York'
-  //   }
-  // };
-
-  //?q=John&page=1&limit=10
-
   useEffect(() => {
     const getData = async () => {
       let response = await api.get(`/api/users?q=${search}&page=1&limit=15`)
       setCsvData(response.data)
-      // console.log(response);
-
     }
 
     getData()
