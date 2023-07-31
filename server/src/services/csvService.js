@@ -23,13 +23,13 @@ exports.csvService = (req, res) => {
           const savedData = await CsvData.insertMany(documentsToSave);
           return res.status(201).send(savedData);
         } catch (error) {
-          console.error('Error saving data:', error);
+          // console.error('Error saving data:', error);
           return res.status(500).send('Internal error saving data.');
         }
       });
 
   } catch (error) {
-    console.error('Error reading file:', error);
+    // console.error('Error reading file:', error);
     return res.status(500).send('Internal error reading file.');
   }
 }
@@ -79,7 +79,7 @@ exports.csvReadService = async (req, res) => {
 
     return res.status(200).json(items);
   } catch (error) {
-    console.error('Error finding items:', error);
+    // console.error('Error finding items:', error);
     return res.status(500).send('Internal error.');
   }
 };

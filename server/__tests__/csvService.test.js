@@ -1,6 +1,6 @@
 const fs = require('fs');
 const CsvData = require('../src/models/csvModel');
-const { csvService } = require('../src/services/csvService');
+const { csvService, csvReadService } = require('../src/services/csvService');
 
 jest.mock('fs');
 jest.mock('../src/models/csvModel');
@@ -25,6 +25,9 @@ describe('Test csvService', () => {
       { _id: '2', data: { name: 'Usuário 2', email: 'usuario2@example.com' } },
     ];
 
+    fs.unlinkSync = jest.fn();
+
+
     CsvData.insertMany.mockResolvedValue(mockSavedData);
 
     await csvService(req, res);
@@ -33,6 +36,7 @@ describe('Test csvService', () => {
     expect(CsvData.insertMany).toHaveBeenCalledWith(mockCsvData);
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.send).toHaveBeenCalledWith(mockSavedData);
+    expect(fs.unlinkSync).toHaveBeenCalledWith('../uploads/Tomatoes.csv');
   });
 
   it('Should return internal error if error saving into database', async () => {
@@ -63,7 +67,7 @@ describe('Test csvService', () => {
   it('Should return internal error  if error reading CSV', async () => {
     const req = {
       file: {
-        path: '../uploads/Tomatoes.csv',
+        path: '../uploads/Toms.csv',
       },
     };
     const res = {

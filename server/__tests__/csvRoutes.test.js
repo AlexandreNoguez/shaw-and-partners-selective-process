@@ -1,5 +1,6 @@
 const request = require('supertest');
 const app = require('../src/index');
+const CsvData = require('../src/models/csvModel');
 
 
 describe('Testing routes', () => {
@@ -12,7 +13,7 @@ describe('Testing routes', () => {
   });
 
   test('GET /users - Should return status 200', async () => {
-    const res = await request(app).get('/users');
+    const res = await request(app).get('/api/users');
 
     expect(res.status).toBe(200);
   });
